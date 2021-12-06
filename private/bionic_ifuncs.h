@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 The Android Open Source Project
+ * Copyright (C) 2019 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,27 +26,30 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __BIONIC_PRIVATE_BIONIC_CTYPE_H_
-#define __BIONIC_PRIVATE_BIONIC_CTYPE_H_
+#pragma once
 
-static inline bool IsAlpha(int ch) {
-  return (ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z');
-}
+#include <stdint.h>
+#include <sys/ifunc.h>
 
-static inline bool IsDigit(int ch) {
-  return (ch >= '0' && ch <= '9');
-}
-
-static inline bool IsSpace(int ch) {
-  return (ch == ' ') || (ch >= '\t' && ch <= '\r');
-}
-
-static inline bool IsUpper(int ch) {
-  return (ch >= 'A' && ch <= 'Z');
-}
-
-static inline bool IsXDigit(int ch) {
-  return (ch >= '0' && ch <= '9') || (ch >= 'A' && ch <= 'F') || (ch >= 'a' && ch <= 'f');
-}
-
+#if defined(__aarch64__)
+#define IFUNC_ARGS (uint64_t hwcap __attribute__((unused)), \
+                    __ifunc_arg_t* arg __attribute__((unused)))
+#elif defined(__arm__)
+#define IFUNC_ARGS (unsigned long hwcap __attribute__((unused)))
+#else
+#define IFUNC_ARGS ()
 #endif
+
+#define DEFINE_IFUNC_FOR(name) \
+    name##_func name __attribute__((ifunc(#name "_resolver"))); \
+    __attribute__((visibility("hidden"))) \
+    name##_func* name##_resolver IFUNC_ARGS
+
+#define DECLARE_FUNC(type, name) \
+    __attribute__((visibility("hidden"))) \
+    type name
+
+#define RETURN_FUNC(type, name) { \
+        DECLARE_FUNC(type, name); \
+        return name; \
+    }

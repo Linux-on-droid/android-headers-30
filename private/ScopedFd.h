@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2019 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,21 +26,39 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __BIONIC_PRIVATE_GET_TLS_H_
-#define __BIONIC_PRIVATE_GET_TLS_H_
+#pragma once
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-void **__get_tls(void);
-void **__get_tls_hooks(void);
-#ifdef __cplusplus
-}
-#endif
+#include <unistd.h>
 
-#include "__get_tls_internal.h"
+#include "platform/bionic/macros.h"
+#include "private/ErrnoRestorer.h"
 
-//#define __get_tls __get_tls_hooks
+class ScopedFd final {
+ public:
+  explicit ScopedFd(int fd) : fd_(fd) {
+  }
 
+  ScopedFd() : fd_(-1) {
+  }
 
-#endif /* __BIONIC_PRIVATE_GET_TLS_H_ */
+  ~ScopedFd() {
+    reset(-1);
+  }
+
+  void reset(int fd = -1) {
+    if (fd_ != -1) {
+      ErrnoRestorer e;
+      close(fd_);
+    }
+    fd_ = fd;
+  }
+
+  int get() const {
+    return fd_;
+  }
+
+ private:
+  int fd_;
+
+  BIONIC_DISALLOW_COPY_AND_ASSIGN(ScopedFd);
+};
