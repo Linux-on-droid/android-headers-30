@@ -1,14 +1,14 @@
-Source: android-headers-29
+Source: android-headers-30
 Priority: optional
 Maintainer: Eugenio Paolantonio <eugenio@droidian.org>
 XSBC-Original-Maintainer: TheKit <nekit1000@gmail.com>
 Build-Depends: debhelper (>= 9)
 Standards-Version: 3.9.8
 Section: libs
-Homepage: https://github.com/droidian/android-headers-29
-Vcs-Git: https://github.com/droidian/android-headers-29.git
+Homepage: https://github.com/droidian/android-headers-30
+Vcs-Git: https://github.com/droidian/android-headers-30.git
 
-Package: android-headers-29
+Package: android-headers-30
 Architecture: all
 Provides: android-headers
 Depends: ${shlibs:Depends}, ${misc:Depends}
@@ -21,4 +21,4 @@ Description: Android Platform Headers from AOSP releases
  different releases is required (e.g. for libhybris).
  .
  This package provides the platform development headers for core components
- of LineageOS, for the 10 release.
+ of LineageOS, for the 11 release.

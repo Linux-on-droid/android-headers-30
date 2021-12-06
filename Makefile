@@ -11,6 +11,7 @@ install:
 	cp android-headers.pc $(DESTDIR)/$(PKGCONFIGDIR)
 	sed -i -e s:prefix=/usr:prefix=$(PREFIX):g $(DESTDIR)/$(PKGCONFIGDIR)/android-headers.pc
 	cp -r android $(DESTDIR)/$(INCLUDEDIR)
+	cp -r apex $(DESTDIR)/$(INCLUDEDIR)
 	cp -r cutils $(DESTDIR)/$(INCLUDEDIR)
 	cp -r hardware $(DESTDIR)/$(INCLUDEDIR)
 	cp -r hardware_legacy $(DESTDIR)/$(INCLUDEDIR)
